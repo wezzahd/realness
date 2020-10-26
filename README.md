@@ -1,2 +1,2 @@
 # realness
- realness bunjil place outdoor scren
+ realness bunjil place outdoor screen
