@@ -1,0 +1,51 @@
+html, body {
+  height: 100.1%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  overflow: hidden; /* Hide scrollbars */
+
+  /* This centers our sketch horizontally. */
+  justify-content: center;
+
+  /* This centers our sketch vertically. */
+  align-items: center;
+}
+
+canvas {
+  display: block;
+}
+
+.didactic {
+	font-family: monospace;
+	color: #000000;
+	font-size: 14pt;
+  overflow:auto;
+}
+
+.didacticcenter {
+	font-family: monospace;
+	color: #000000;
+	font-size: 14pt;
+  text-align: center;
+  display: block
+}
+
+.didacticleft {
+	font-family: monospace;
+	color: #000000;
+	font-size: 14pt;
+  text-align: left;
+  display: block
+}
+
+.didacticright {
+	font-family: monospace;
+	color: #ffffff;
+	font-size: 10pt;
+  text-align: right;
+  vertical-align: text-top;
+  overflow: hidden
+}
