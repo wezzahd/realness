@@ -22,7 +22,7 @@ function shaderDraw() {
 
   //blendMode(SCREEN);
 
-  radius = 20;
+  radius = 100;
 
 
   let mx = map(mouseX, 0, width, 0, 1);

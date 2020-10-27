@@ -30,47 +30,6 @@ class ParticleSystem {
     }
   }
 
-  intersection() {
-
-    let boundary = new Rectangle(0, 0, width, height);
-    let qtree = new QuadTree(boundary, 4);
-
-    for (let particle of this.particles) {
-      let point = new Point(particle.position.x, particle.position.y, particle);
-      qtree.insert(point);
-
-
-      let range = new Rectangle(particle.position.x, particle.position.y,
-        particle.size_v2 * 2, particle.size_v2 * 2);
-      let points = qtree.query(range);
-
-      for (let point of points) {
-        let other = point.userData;
-
-
-        if (particle !== other && particle.intersects(other)) {
-          particle.intersectForce();
-          // stroke(particle.c);
-          // strokeWeight(0.5);
-          // //fill(255,40);
-          // beginShape(LINES);
-          //
-          // //if (particle.history.length > 290) {
-          // //  let d = dist(particle.position.x, particle.position.x, particle.history[89].x, particle.history[89].y);
-          // //  if (d < height) {
-          // //    vertex(particle.history[50].x, particle.history[50].y);
-          // //  vertex(particle.history[289].x, particle.history[289].y);
-          // //  }
-          // vertex(particle.position.x, particle.position.y);
-          // vertex(other.position.x, other.position.y);
-          // //  }
-          // endShape(CLOSE);
-
-
-        }
-      }
-    }
-  }
 
 
   behaviors() {
@@ -90,14 +49,6 @@ class ParticleSystem {
     }
   }
 
-  applyRepeller(r) {
-    for (let particle of this.particles) {
-      if (particle.local_force == true) {
-        let force = r.repel(particle);
-        particle.applyForce(force);
-      }
-    }
 
-  }
 
 }

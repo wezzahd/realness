@@ -1,68 +1,23 @@
-let ps;
-
-
-let x = 0;
-let y = 0;
-let skip = 10; //48 iphone
-let factor = 1.0;
-let aspect = 9 / 16;
-
-var img;
-var first_frame = true;
-var go = true;
-var counter = 0;
-
-var reset = false;
-
-var cnv;
-
-var LFO = false;
-
-var isMobile = false; //initiate as false
-
-var isAndroid = false;
-
-var intersect_toggle = false;
-
-var eraser_size = 20;
-
-var main_animation = false;
-
-var loading_cap;
-
-var pg;
-
-var alpha_load = 0;
-
-var loading_alpha = 100;
-
-var trigger = false;
-
-var counter = 0;
-
-var ellipse_mouseX, ellipse_mouseY;
+var isMobile = false;
 
 var fullscreen_button;
 
 var pixelShaderToggle = false;
 var instruction_toggle = false;
 
-var instructionpg;
-
 var text_dict, link, text1, text2, text3;
-var cambuttonX,cambuttonY;
+var cambuttonX, cambuttonY;
 
-var touchtime = 0;
 
-document.addEventListener('touchmove', function(event) {
-  if (event.scale !== 1) {
-    event.preventDefault();
-  }
-}, false);
+let mouseIsMoving = false;
 
-document.body.scrollTop = 0; // <-- pull the page back up to the top
-document.body.style.overflow = 'hidden';
+let hideicon = false;
 
+let ps, img;
+let touchtime;
+
+var reset = false;
+var eraser_size = 20;
 
 
 function centerCanvas() {
@@ -74,7 +29,7 @@ function centerCanvas() {
 p5.disableFriendlyErrors = true; // disables FES
 
 function preload() {
-  //capture = loadImage("test.png");
+
 
   // device detection
   if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
@@ -92,90 +47,60 @@ function preload() {
 function setup() {
 
   if (isMobile == false) {
-    skip = 200;
     cnv = createCanvas(windowWidth, windowHeight);
+    cnv.id('mycanvas');
     cnv.style('display', 'block');
+    FScreen.style.display = "block";
+
   } else {
-    skip = 200;
-    cnv = createCanvas(windowWidth, windowHeight);
-    cnv.style('display', 'block');
+
+    if (windowWidth < windowHeight) {
+      inner = iosInnerHeight();
+      cnv = createCanvas(windowWidth, inner);
+      cnv.id('mycanvas');
+      cnv.style('display', 'block');
+      console.log("portrait")
+    } else {
+      cnv = createCanvas(windowWidth, windowHeight);
+      cnv.id('mycanvas');
+      cnv.style('display', 'block');
+      console.log("landscape")
+    }
   }
 
-
-
   pixelDensity(1);
-
-  buttonSetup();
-
-  img = createImage(width, height);
-  instructionpg = createGraphics(width, height);
-
-  let mouse = createVector();
-
-  captureEvent();
   firebasesetup();
   shaderSetup();
-  buttonText();
-  //background(0);
-}
 
-function ready() {
-  go = true;
-}
-
-function captureEvent() {
   ps = new ParticleSystem(createVector(width / 2, height / 2), img);
-  repeller = new Repeller(width / 2, height / 2);
 }
 
 function draw() {
 
   particle_draw();
-  mouseOverBox();
 
-  if (pixelShaderToggle) {
-    shaderDraw();
+  if (mouseIsMoving == true) {
+    cursor();
+  } else {
+    noCursor();
   }
 
-  if (instruction_toggle) {
-    loadingScreen(instructionpg);
-  }
+}
 
-  instructionsButtons();
+function shaderToggle(){
+
+pixelShaderToggle = !pixelShaderToggle;
+
 }
 
 function particle_draw() {
 
-  if (counter < 5) {
-    mouseX = width - 40;
-    mouseY = height / 2;
-  } else {
-    mouseX = mouseX;
-    mouseY = mouseY;
-  }
-
-  if (counter < 25) {
-
-    counter = counter + 1;
-  }
-
+touchtime = frameCount % 600;  //10 second loop approx
 
   blendMode(BLEND);
   background(0);
+  blendMode(ADD);
 
-
-touchtime = frameCount % 600;  //10 second loop approx
-
-
-blendMode(ADD);
-
-// if (pixelShaderToggle){
-//   push();
-//   noStroke();
-//   fill(127,127);
-//   //rectMode(CENTER);
-//   rect(0,0,width,height);
-// }
 
  noCursor();
  push();
@@ -184,15 +109,6 @@ blendMode(ADD);
  ellipseMode(CENTER);
  ellipse(mouseX,mouseY,40);
  pop();
-
-  // if (displayHeight > 800) {
-  //
-  //   var zoom = map(counter, 0, 25, 1.0, 1.5);
-  //   translate(width / 2 - ((width / 2) * zoom), height / 2 - ((height / 2) * zoom));
-  //   scale(zoom);
-  // }
-
-
 
 
   // The touches array holds an object for each and every touch
@@ -210,139 +126,102 @@ blendMode(ADD);
 
   }
 
-
   ps.run();
 
-  if (!pixelShaderToggle && !instruction_toggle) {
-    ps.intersection();
-  }
-
-  if (pixelShaderToggle || instruction_toggle) {
-    ps.return_home();
-  }
-
-
-
-
-  ps.behaviors();
-//  ps.applyRepeller(repeller);
-
-
+  // if (!pixelShaderToggle && !instruction_toggle) {
+  //
+  // }
+  //
+  // if (pixelShaderToggle || instruction_toggle) {
+  //   ps.return_home();
+  // }
 
   if (pixelShaderToggle) {
-    ps.return_home();
-  }
+     shaderDraw();
+   }
+
+  ps.behaviors();
+
+  // if (pixelShaderToggle) {
+  //   ps.return_home();
+  // }
 
   stroke(255);
   noFill();
-  //rect(mouseX, mouseY, eraser_size * 2, eraser_size * 2);
-
-  // if (counter < 25) {
-  //
-  //   var trans = map(counter, 0, 25, 255, 0);
-  //
-  //   blendMode(BLEND);
-  //   noStroke();
-  //   fill(0, trans);
-  //   rect(0, 0, width, height);
-  //
-  // }
-
-
 }
 
 function touchMoved(event) {
   return false;
 }
 
+function mousePressed() {
+  shaderMousePressed();
+}
+
+
+function keyPressed(){
+
+  if (key == 'H' || key == 'h' ){
+
+    hideicon = !hideicon;
+
+    if (hideicon) {
+    icons.style.display = "none";
+  }else{
+    icons.style.display = "block";
+  }
+
+  }
+}
+
+function mouseMoved() {
+  mouseIsMoving = true;
+
+  setTimeout(function() { // this is to delay the execution of the code within, this is pure javaScript
+    mouseIsMoving = false;
+  }, 3000) //it takes a time in MS
+
+}
+
 function windowResized() {
 
-  if (main_animation == true) {
+  if (!isMobile) {
     resizeCanvas(windowWidth, windowHeight);
-    centerCanvas();
-    captureEvent();
-    pixelpg.resizeCanvas(windowWidth, windowHeight);
-    instructionpg.resizeCanvas(windowWidth, windowHeight);
   } else {
-
-    resizeCanvas(windowWidth, windowHeight);
-    pixelpg.resizeCanvas(windowWidth, windowHeight);
-    instructionpg.resizeCanvas(windowWidth, windowHeight);
-    buttonSetup();
-    //centerCanvas();
-    //  pg = createGraphics(width, height);
-    //  loadingScreen();
+    let innerh = iosInnerHeight();
+    resizeCanvas(windowWidth, innerh);
   }
+
+  shaderWindowResized();
+
 }
 
-function mouseOverBox(){
+function infoInstructions() {
 
-  if (mouseX > width - 75 && mouseX < width && mouseY > 0 && mouseY < 50) {
-text1.show();
-buttonCol1 = 255;
-}else{
-  text1.hide();
-  buttonCol1 = 0;
+  instruction_toggle = !instruction_toggle;
+  var x = document.getElementById("myLinks");
+  icons.classList.toggle("fa-window-close");
+  myLinks.style.display = "block";
+  myInfo.style.display = "block";
+  //  myInfo.style.overflowY = "scroll";
+  myInfo.style.background = "rgba(255, 255, 255, 0.8)";
+
+  if (instruction_toggle) {
+    myInfo.style.display = "block";
+    myInfo.style.background = "rgba(255, 255, 255, 0.8)";
+    //  myInfo.style.overflowY = "scroll";
+  } else {
+    myInfo.style.display = "none";
+    myInfo.style.background = "none";
+    myLinks.style.display = "none";
+    //  myInfo.style.overflowY = "hidden";
+  }
+
 }
 
-
-  if (mouseX > width - 75 && mouseX < width && mouseY > 50 && mouseY < 80 && isMobile == false) {
-
-    text2.show();
-    buttonCol2 = 255;
-    }else{
-      text2.hide();
-      buttonCol2 = 0;
-    }
-
-
-  if (mouseX > width - 75 && mouseX < width && mouseY > 80 && mouseY < 110) {
-    text3.show();
-    buttonCol3 = 255;
-    }else{
-      text3.hide();
-      buttonCol3 = 0;
-    }
-}
-
-
-
-function mousePressed() {
-
-  shaderMousePressed();
-
-  if (mouseX > width - 75 && mouseX < width && mouseY > 0 && mouseY < 50) {
-    pixelShaderToggle = !pixelShaderToggle;
-    console.log(pixelShaderToggle);
-  }
-
-  if (mouseX > width - 75 && mouseX < width && mouseY > 50 && mouseY < 80 && isMobile == false) {
-    let fs = fullscreen();
-    fullscreen(!fs);
-    //Remove vert scroll bar in fullScreen
-     document.body.scrollTop = 0; // <-- pull the page back up to the top
-    document.body.style.overflow = 'hidden';
-
-  }
-
-  if (mouseX > width - 75 && mouseX < width && mouseY > 80 && mouseY < 110) {
-    instruction_toggle = !instruction_toggle;
-    if (instruction_toggle) {
-      instructionsDidactic();
-    } else {
-      remove_elements();
-    }
-
-  }
-  //
-  //
-  // if (mouseX > 0 && mouseX < width && mouseY > height - 40 && mouseY < height && isAndroid == true && width < height) {
-  //   let fs = fullscreen();
-  //   fullscreen(!fs);
-  // }
-  //
-  // if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < 30 && isAndroid == true && height < width) {
-  //   let fs = fullscreen();
-  //   fullscreen(!fs);
-  // }
+function fullScreenMenu() {
+  let fs = fullscreen();
+  fullscreen(!fs);
+  document.body.scrollTop = 0; // <-- pull the page back up to the top
+  document.body.style.overflow = 'hidden';
 }

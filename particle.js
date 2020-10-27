@@ -216,13 +216,13 @@ class Particle {
   // Method to display
   display() {
 
-    if (mouseIsPressed || LFO == true) {
-
-      this.fill_alpha = map(this.d, 0, 500, 255, 40);
-      //this.size_v2 = map(this.d, 0, 500, skip, this.maxsize);
-      //this.amplitude = map(this.d, 0, 500, 0, this.amplitude);
-      this.size_osc = 0;
-    }
+    // if (mouseIsPressed || LFO == true) {
+    //
+    //   this.fill_alpha = map(this.d, 0, 500, 255, 40);
+    //   //this.size_v2 = map(this.d, 0, 500, skip, this.maxsize);
+    //   //this.amplitude = map(this.d, 0, 500, 0, this.amplitude);
+    //   this.size_osc = 0;
+    // }
 
     if (this.d > 0.05 && mouseIsPressed) {
       this.local_force = false;

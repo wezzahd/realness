@@ -62,11 +62,11 @@ void main()  {
 
   //  float dis =  distance(pos,mousePosition);//abs((1.0 - distance(pos,mousePosition)));
 
-    vec2 sizer = vec2(radius/4.0);
+    vec2 sizer = vec2(radius/2.0);
 
     //sizer = sizer + dis ;
 
-    float d = box(pos, sizer, 0.5);
+    float d = ComputeCircle(pos, vec2(0.5),sizer.x, 0.5);
 
     // Compute "pixelated" (stepped) texture coordinates using the floor() function.
     // The position is adjusted to match the circles, i.e. so a pixelated block is at the center of the
@@ -89,7 +89,7 @@ void main()  {
 
 //float select = lerp(0.3,1.0,mousecirc);
 
-    vec3 col = mix(texColor, bg, 1.0-d);
+    vec3 col = mix(texColor, bg, d);
 
 	//	vec3 mouseCol = mix(mouseColor,vec3(.5),mousecirc) + (vec3(mousecirc2)*0.5);
 
