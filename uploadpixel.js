@@ -3,6 +3,8 @@ let cam;
 let pixelpg;
 let radius, colour;
 
+//load shader for camera module
+
 function shaderPreload() {
   // load the shader
   pixelShader = loadShader('shader/effect.vert', 'shader/pixelfrag.frag');
@@ -22,7 +24,7 @@ function shaderDraw() {
 
   //blendMode(SCREEN);
 
-  radius = 100;
+  radius = 50;
 
 
   let mx = map(mouseX, 0, width, 0, 1);

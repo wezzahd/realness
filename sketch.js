@@ -155,11 +155,15 @@ function touchMoved(event) {
 }
 
 function mousePressed() {
+
+  //sample and upload pixel to firebase
   shaderMousePressed();
 }
 
 
 function keyPressed(){
+
+  //Hide hamburger
 
   if (key == 'H' || key == 'h' ){
 
@@ -197,6 +201,8 @@ function windowResized() {
 }
 
 function infoInstructions() {
+
+  //CSS Didatics
 
   instruction_toggle = !instruction_toggle;
   var x = document.getElementById("myLinks");

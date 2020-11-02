@@ -98,5 +98,5 @@ void main()  {
 //col = vec3(col.r,col.r,col.r);
 
     // Set the final fragment color.
-	   gl_FragColor = vec4(col, 1.0);
+	   gl_FragColor = vec4(texColor, 1.0);
 }
