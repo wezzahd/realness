@@ -1,6 +1,8 @@
 # Realness
  Realness - Bunjil Place Outdoor Screen
 
+ https://code.wesleydowling.com/realness/
+
 ## Timeline
 
 https://docs.google.com/spreadsheets/d/1quqKdXNbvNe-xBdyqZVQ92Uwj8ADPTEwRKyobJWrGEw/edit?usp=sharing
@@ -12,7 +14,7 @@ Website data workflow
 ![picture](docs/workflow.jpg)
 
 ###### Website Elements to develop
-Framework of site has been completed except sound.
+Basic shell of site has been completed except sound.
 
 ###### Didactics
 Artwork title, instructions, artist statement, logos, links to social media & websites.
